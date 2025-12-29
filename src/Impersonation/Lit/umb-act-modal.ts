@@ -1,16 +1,11 @@
-import {customElement, state} from 'lit/decorators.js';
-import {UUIModalElement} from "@umbraco-ui/uui";
-import {css, html} from "lit";
-import {MemberOrderByModel, UserAuthToken} from "./types";
-import {ImpersonationService} from "../Client/src/impersonation-api";
-import {
-  DirectionModel,
-  GetFilterMemberData,
-  MemberItemResponseModel,
-  MemberService
-} from "../Client/src/management-api";
+import { customElement, state } from "lit/decorators.js";
+import { UUIModalElement } from "@umbraco-ui/uui";
+import { css, html } from "lit";
+import { MemberOrderByModel, UserAuthToken } from "./types";
+import { ImpersonationService } from "../Client/src/impersonation-api";
+import { DirectionModel, GetFilterMemberData, MemberItemResponseModel, MemberService } from "../Client/src/management-api";
 
-@customElement('umb-act-modal')
+@customElement("umb-act-modal")
 export class UmbActModal extends UUIModalElement {
   static styles = [
     css`
@@ -80,8 +75,8 @@ export class UmbActModal extends UUIModalElement {
         padding: 0 var(--uui-size-space-5);
         padding-bottom: var(--uui-size-space-2);
       }
-    `
-  ]
+    `,
+  ];
 
   @state()
   filters: GetFilterMemberData["query"] = {
@@ -93,7 +88,7 @@ export class UmbActModal extends UUIModalElement {
     orderDirection: DirectionModel.ASCENDING,
     filter: "",
     skip: 0,
-    take: 20
+    take: 20,
   };
 
   items: MemberItemResponseModel[] = [];
@@ -108,7 +103,7 @@ export class UmbActModal extends UUIModalElement {
     super();
     this.getMemberItems = this.getMemberItems.bind(this);
     this.onInputChange = this.onInputChange.bind(this);
-    this.userAuth = JSON.parse(localStorage.getItem('umb:userAuthTokenResponse'));
+    this.userAuth = JSON.parse(localStorage.getItem("umb:userAuthTokenResponse"));
   }
 
   render() {
@@ -118,25 +113,29 @@ export class UmbActModal extends UUIModalElement {
           <uui-dialog>
             <div>
               <div>
-                <uui-input
-                  type="search" pristine="" label="Label"
-                  placeholder="Type to search..." .onInput="${this.onInputChange}">
+                <uui-input type="search" pristine="" label="Label" placeholder="Type to search..." .onInput="${this.onInputChange}">
                   <uui-icon-registry-essential class="umb-impersonation-search-icon" slot="prepend">
-                    <uui-icon name="search"/>
+                    <uui-icon name="search" />
                   </uui-icon-registry-essential>
                 </uui-input>
               </div>
               <div class="search-providers">
-                <button @click="${() => {
-                  this.filters.isApproved = !this.filters.isApproved;
-                  this.requestUpdate("filters");
-                }}" class="search-provider ${this.filters.isApproved ? 'active' : ''}">
+                <button
+                  @click="${() => {
+                    this.filters.isApproved = !this.filters.isApproved;
+                    this.requestUpdate("filters");
+                  }}"
+                  class="search-provider ${this.filters.isApproved ? "active" : ""}"
+                >
                   Is Approved
                 </button>
-                <button @click="${() => {
-                  this.filters.isLockedOut = !this.filters.isLockedOut;
-                  this.requestUpdate("filters");
-                }}" class="search-provider ${this.filters.isLockedOut ? 'active' : ''}">
+                <button
+                  @click="${() => {
+                    this.filters.isLockedOut = !this.filters.isLockedOut;
+                    this.requestUpdate("filters");
+                  }}"
+                  class="search-provider ${this.filters.isLockedOut ? "active" : ""}"
+                >
                   Is Locked Out
                 </button>
                 <uui-select
@@ -146,18 +145,18 @@ export class UmbActModal extends UUIModalElement {
                   }}
                   label="Select Take"
                   .options=${[
-                    {name: this.filters.take === 20 ? 'Take ' + 20 : 20, value: 20, selected: this.filters.take === 20},
-                    {name: this.filters.take === 50 ? 'Take ' + 50 : 50, value: 50, selected: this.filters.take === 50},
+                    { name: this.filters.take === 20 ? "Take " + 20 : 20, value: 20, selected: this.filters.take === 20 },
+                    { name: this.filters.take === 50 ? "Take " + 50 : 50, value: 50, selected: this.filters.take === 50 },
                     {
-                      name: this.filters.take === 100 ? 'Take ' + 100 : 100,
+                      name: this.filters.take === 100 ? "Take " + 100 : 100,
                       value: 100,
-                      selected: this.filters.take === 100
+                      selected: this.filters.take === 100,
                     },
                     {
-                      name: this.filters.take === 200 ? 'Take ' + 200 : 200,
+                      name: this.filters.take === 200 ? "Take " + 200 : 200,
                       value: 200,
-                      selected: this.filters.take === 200
-                    }
+                      selected: this.filters.take === 200,
+                    },
                   ]}
                 ></uui-select>
                 <uui-select
@@ -168,36 +167,32 @@ export class UmbActModal extends UUIModalElement {
                   label="Select Order By"
                   .options=${[
                     {
-                      name: this.filters.orderBy === MemberOrderByModel.EMAIL ? 'Order By ' + MemberOrderByModel.EMAIL : MemberOrderByModel.EMAIL,
+                      name: this.filters.orderBy === MemberOrderByModel.EMAIL ? "Order By " + MemberOrderByModel.EMAIL : MemberOrderByModel.EMAIL,
                       value: MemberOrderByModel.EMAIL,
-                      selected: this.filters.orderBy === MemberOrderByModel.EMAIL
+                      selected: this.filters.orderBy === MemberOrderByModel.EMAIL,
                     },
                     {
-                      name: this.filters.orderBy === MemberOrderByModel.NAME ? 'Order By ' + MemberOrderByModel.NAME : MemberOrderByModel.NAME,
+                      name: this.filters.orderBy === MemberOrderByModel.NAME ? "Order By " + MemberOrderByModel.NAME : MemberOrderByModel.NAME,
                       value: MemberOrderByModel.NAME,
-                      selected: this.filters.orderBy === MemberOrderByModel.NAME
+                      selected: this.filters.orderBy === MemberOrderByModel.NAME,
                     },
                     {
-                      name: this.filters.orderBy === MemberOrderByModel.USERNAME ? 'Order By ' + MemberOrderByModel.USERNAME : MemberOrderByModel.USERNAME,
+                      name: this.filters.orderBy === MemberOrderByModel.USERNAME ? "Order By " + MemberOrderByModel.USERNAME : MemberOrderByModel.USERNAME,
                       value: MemberOrderByModel.USERNAME,
-                      selected: this.filters.orderBy === MemberOrderByModel.USERNAME
+                      selected: this.filters.orderBy === MemberOrderByModel.USERNAME,
                     },
                   ]}
                 ></uui-select>
               </div>
               <uui-scroll-container>
-                ${this.items.map(item => html`
-                  <umb-act-member-item-actions .item=${item}>
-                    <umb-act-search-result-item
-                      .item="${item}"/>
-                  </umb-act-member-item-actions>`)}
+                ${this.items.map(
+                  (item) => html` <umb-act-member-item-actions .item=${item}>
+                    <umb-act-search-result-item .item="${item}" />
+                  </umb-act-member-item-actions>`
+                )}
               </uui-scroll-container>
               <div>
-                <uui-button @click="${this.stopImpersonating}" class="umb-act-logout" label="impersonate"
-                            look="primary"
-                            color="danger">
-                  Stop impersonating
-                </uui-button>
+                <uui-button @click="${this.stopImpersonating}" class="umb-act-logout" label="impersonate" look="primary" color="danger"> Stop impersonating </uui-button>
               </div>
             </div>
           </uui-dialog>
@@ -209,9 +204,9 @@ export class UmbActModal extends UUIModalElement {
   async stopImpersonating() {
     await ImpersonationService.stopImpersonation({
       headers: {
-        Authorization: 'Bearer ' + this.userAuth.access_token
-      }
-    }).then(({response}) => {
+        Authorization: "Bearer " + this.userAuth.access_token,
+      },
+    }).then(({ response }) => {
       if (response.ok) {
         window.location.reload();
       }
@@ -219,41 +214,41 @@ export class UmbActModal extends UUIModalElement {
   }
 
   async getMemberItems() {
-    const {response, data} = await MemberService.getFilterMember({
+    const { response, data } = await MemberService.getFilterMember({
       query: this.filters,
       headers: {
-        Authorization: 'Bearer ' + this.userAuth.access_token
-      }
+        Authorization: "Bearer " + this.userAuth.access_token,
+      },
     });
 
     if (!response.ok) {
-      console.error('There was a problem with the fetch operation:', await response.text());
+      console.error("There was a problem with the fetch operation:", await response.text());
     } else {
       this.items = data.items;
-      this.requestUpdate('items');
+      this.requestUpdate("items");
     }
   }
 
   onInputChange(event: InputEvent) {
     clearTimeout(this.inputTimeout);
-    let value = '';
+    let value = "";
     const target = event.target as HTMLInputElement | null;
-    if (target && typeof target.value === 'string') {
+    if (target && typeof target.value === "string") {
       value = target.value;
     } else if (event.composedPath) {
       const pathValue = (event.composedPath()[0] as any).value;
-      if (typeof pathValue === 'string') {
+      if (typeof pathValue === "string") {
         value = pathValue;
       }
     }
     this.inputTimeout = window.setTimeout(() => {
       this.filters.filter = value;
-      this.requestUpdate('filters');
+      this.requestUpdate("filters");
     }, 200);
   }
 
   protected updated(changedProps: Map<string, unknown>) {
-    if (changedProps.has('filters')) {
+    if (changedProps.has("filters")) {
       this.getMemberItems(); // triggers when filters object reference changes
     }
   }

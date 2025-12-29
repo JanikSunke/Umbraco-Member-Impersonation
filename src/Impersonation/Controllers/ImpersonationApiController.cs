@@ -36,7 +36,7 @@ public class ImpersonationApiController : ImpersonationApiControllerBase
 
         if (result.Succeeded)
         {
-            return Ok("Successfully impersonated");
+            return NoContent();
         }
 
         return BadRequest("Failed to impersonate");

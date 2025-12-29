@@ -7130,19 +7130,23 @@
           <uui-dialog>
             <div>
               <div>
-                <uui-input
-                  type="search" pristine="" label="Label"
-                  placeholder="Type to search..." .onInput="${this.onInputChange}">
+                <uui-input type="search" pristine="" label="Label" placeholder="Type to search..." .onInput="${this.onInputChange}">
                   <uui-icon-registry-essential class="umb-impersonation-search-icon" slot="prepend">
-                    <uui-icon name="search"/>
+                    <uui-icon name="search" />
                   </uui-icon-registry-essential>
                 </uui-input>
               </div>
               <div class="search-providers">
-                <button @click="${()=>{this.filters.isApproved=!this.filters.isApproved,this.requestUpdate("filters")}}" class="search-provider ${this.filters.isApproved?"active":""}">
+                <button
+                  @click="${()=>{this.filters.isApproved=!this.filters.isApproved,this.requestUpdate("filters")}}"
+                  class="search-provider ${this.filters.isApproved?"active":""}"
+                >
                   Is Approved
                 </button>
-                <button @click="${()=>{this.filters.isLockedOut=!this.filters.isLockedOut,this.requestUpdate("filters")}}" class="search-provider ${this.filters.isLockedOut?"active":""}">
+                <button
+                  @click="${()=>{this.filters.isLockedOut=!this.filters.isLockedOut,this.requestUpdate("filters")}}"
+                  class="search-provider ${this.filters.isLockedOut?"active":""}"
+                >
                   Is Locked Out
                 </button>
                 <uui-select
@@ -7157,24 +7161,18 @@
                 ></uui-select>
               </div>
               <uui-scroll-container>
-                ${this.items.map(r=>l`
-                  <umb-act-member-item-actions .item=${r}>
-                    <umb-act-search-result-item
-                      .item="${r}"/>
+                ${this.items.map(r=>l` <umb-act-member-item-actions .item=${r}>
+                    <umb-act-search-result-item .item="${r}" />
                   </umb-act-member-item-actions>`)}
               </uui-scroll-container>
               <div>
-                <uui-button @click="${this.stopImpersonating}" class="umb-act-logout" label="impersonate"
-                            look="primary"
-                            color="danger">
-                  Stop impersonating
-                </uui-button>
+                <uui-button @click="${this.stopImpersonating}" class="umb-act-logout" label="impersonate" look="primary" color="danger"> Stop impersonating </uui-button>
               </div>
             </div>
           </uui-dialog>
         </uui-modal-dialog>
       </uui-modal-container>
-    `}async stopImpersonating(){await fo.stopImpersonation({headers:{Authorization:"Bearer "+this.userAuth.access_token}}).then(({response:r})=>{r.ok&&window.location.reload()})}async getMemberItems(){let{response:r,data:n}=await da.getFilterMember({query:this.filters,headers:{Authorization:"Bearer "+this.userAuth.access_token}});r.ok?(this.items=n.items,this.requestUpdate("items")):console.error("There was a problem with the fetch operation:",await r.text())}onInputChange(r){clearTimeout(this.inputTimeout);let n="",o=r.target;if(o&&typeof o.value=="string")n=o.value;else if(r.composedPath){let s=r.composedPath()[0].value;typeof s=="string"&&(n=s)}this.inputTimeout=window.setTimeout(()=>{this.filters.filter=n,this.requestUpdate("filters")},200)}updated(r){r.has("filters")&&this.getMemberItems()}};vo.styles=[u`
+    `}async stopImpersonating(){await fo.stopImpersonation({headers:{RequestVerificationToken:document.getElementsByName("__RequestVerificationToken")[0].value,Authorization:"Bearer "+this.userAuth.access_token}}).then(({response:r})=>{r.ok&&window.location.reload()})}async getMemberItems(){let{response:r,data:n}=await da.getFilterMember({query:this.filters,headers:{Authorization:"Bearer "+this.userAuth.access_token}});r.ok?(this.items=n.items,this.requestUpdate("items")):console.error("There was a problem with the fetch operation:",await r.text())}onInputChange(r){clearTimeout(this.inputTimeout);let n="",o=r.target;if(o&&typeof o.value=="string")n=o.value;else if(r.composedPath){let s=r.composedPath()[0].value;typeof s=="string"&&(n=s)}this.inputTimeout=window.setTimeout(()=>{this.filters.filter=n,this.requestUpdate("filters")},200)}updated(r){r.has("filters")&&this.getMemberItems()}};vo.styles=[u`
       :host uui-dialog {
         height: max(600px, 80dvh);
         width: min(610px, 100vw);
